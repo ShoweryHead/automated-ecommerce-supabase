@@ -37,3 +37,36 @@ router.delete('/:id', (req, res) => {
 });
 
 module.exports = router;
+
+
+
+
+
+import express from 'express';
+import { supabase } from '../lib/supabase.js';
+
+const router = express.Router();
+
+// Get all products
+router.get('/', async (req, res) => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*');
+  
+  if (error) return res.status(500).json({ error });
+  res.json(data);
+});
+
+// Get single product
+router.get('/:id', async (req, res) => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', req.params.id)
+    .single();
+    
+  if (error) return res.status(404).json({ error });
+  res.json(data);
+});
+
+export default router;
